@@ -4,13 +4,13 @@ const Course = ({ course }) => {
     <>
       <h1>Web development curriculum</h1>
       {course.map((c) => (
-        <>
-          <Header key={c.id} course={c} />
+        <div key={c.id}>
+          <Header course={c} />
           {c.parts.map((p) => (
             <Content key={p.id} part={p} />
           ))}
-          <Total sum={sum(c.parts)} />
-        </>
+          <Total  sum={sum(c.parts)} />
+        </div>
       ))}
     </>
   );
@@ -30,7 +30,7 @@ const Part = ({ part }) => (
 
 const Content = ({ part }) => (
   <>
-    <Part key={part.id} part={part} />
+    <Part part={part} />
   </>
 );
 
