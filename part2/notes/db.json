@@ -32,7 +32,7 @@
     },
     {
       "content": "another",
-      "important": false,
+      "important": true,
       "id": 7
     }
   ]
