@@ -9,7 +9,8 @@ const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
-  const [successMessage, setSuccessMessage] = useState(null);
+  const [notification, setNotification] = useState(null);
+  const [className, setClassName] = useState("success");
 
   const [filter, setFilter] = useState("");
 
@@ -38,22 +39,32 @@ const App = () => {
                 person.id !== returnedPerson.id ? person : returnedPerson
               )
             );
+          }).catch((error) => {
+            setNotification(
+              `Information of ${changedPerson.name} has already been removed from server`
+            );
+            setClassName("error");
+            setTimeout(() => {
+              setNotification(null);
+            }, 5000);
           });
-          setSuccessMessage(
+          setNotification(
             `Updated ${changedPerson.name}`
           );
+          setClassName("success");
           setTimeout(() => {
-            setSuccessMessage(null);
+            setNotification(null);
           }, 5000);
       }
     } else {
       personService.create(personObject).then((returnedPerson) => {
         setPersons(persons.concat(returnedPerson));
-        setSuccessMessage(
+        setNotification(
           `Added ${returnedPerson.name}`
         );
+        setClassName("success");
         setTimeout(() => {
-          setSuccessMessage(null);
+          setNotification(null);
         }, 5000);
       });
     }
@@ -104,7 +115,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={successMessage} />
+      <Notification message={notification} className={className}/>
       <Filter filter={filter} filterChange={handleFilterChange} />
       <h2>add a new</h2>
       <PersonForm
