@@ -20,15 +20,33 @@ const App = () => {
       number: newNumber,
     };
 
-    persons.find((person) => person.name === newName)
-      ? alert(`${newName} is already added to phonebook`)
-      : setPersons(persons.concat(personObject));
+    if (persons.find((person) => person.name === newName)) {
+      if (
+        window.confirm(
+          `${newName} is already added to phonebook, replace the old number with a new one?`
+        )
+      ) {
+        const person = persons.find((person) => person.name === newName);
+        const changedPerson = { ...person, number: newNumber };
+        personService
+          .update(person.id, changedPerson)
+          .then((returnedPerson) => {
+            setPersons(
+              persons.map((person) =>
+                person.id !== returnedPerson.id ? person : returnedPerson
+              )
+            );
+          });
+      }
+    } else {
+      personService.create(personObject).then((returnedPerson) => {
+        setPersons(persons.concat(returnedPerson));
+      });
+    }
 
-    personService.create(personObject).then((returnedPerson) => {
-      setPersons(persons.concat(returnedPerson));
-      setNewName("");
-      setNewNumber("");
-    });
+    setNewName("");
+    setNewNumber("");
+    getAllPersons();
   };
 
   const removePerson = (person) => {
